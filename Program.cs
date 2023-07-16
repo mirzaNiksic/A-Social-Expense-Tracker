@@ -80,7 +80,6 @@ namespace ConsoleApp
                     break;
                 case "5":
                     paymentRequest.ViewUsersPaymentRequestReceived(loggedInUser);
-                    paymentRequest.PayRequest(loggedInUser);
                     ShowOptions(loggedInUser);
                     break;
                 case "6":

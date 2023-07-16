@@ -1,7 +1,8 @@
 using System;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using Newtonsoft.Json;
+using System.Globalization;
 
 namespace ConsoleApp
 {
@@ -145,15 +146,40 @@ namespace ConsoleApp
                 {
                     if (user.email.Equals(loggedInUser.email))
                     {
+                        string input;
                         Console.Write("Enter expense name: ");
                         string expenseName = Console.ReadLine();
                         newExpense.expenseName = expenseName;
+
                         Console.Write("Enter expense date (dd/mm/yyyy): ");
-                        string date = Console.ReadLine();
-                        newExpense.expenseDate = date;
+                        DateTime time;
+                        do
+                        {
+                            input = Console.ReadLine();
+                            if (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out time) == false)
+                            {
+                                Console.WriteLine("Invalid date format.");
+                                Console.Write("Enter expense date (dd/mm/yyyy): ");
+                            }
+                        }
+                        while (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out time) == false);
+                        var dateOnly = DateOnly.FromDateTime(time);
+                        newExpense.expenseDate = dateOnly.ToString();
+
+                        int amount;
                         Console.Write("Enter expense amount: ");
-                        string amount = Console.ReadLine();
-                        newExpense.amountSpent = amount;
+                        do
+                        {
+                            input = Console.ReadLine();
+                            if (int.TryParse(input, out amount) == false)
+                            {
+                                Console.WriteLine("Please enter a valid number.");
+                                Console.Write("Enter expense amount: ");
+                            }
+                        }
+                        while (int.TryParse(input, out amount) == false || amount <= 0);
+                        newExpense.amountSpent = amount.ToString();
+
                         newExpense.paymentRequests = new List<PaymentRequest> { };
                         newExpense.payments = new List<Payment> { };
                     }

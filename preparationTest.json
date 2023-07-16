@@ -1,18 +1,18 @@
 {
   "users": [
     {
-      "email": "ccc",
+      "email": "ttt",
       "expenses": [
         {
-          "expenseName": "e",
-          "expenseDate": "12",
+          "expenseName": "newExp",
+          "expenseDate": "02/05/2022",
           "amountSpent": "1000",
           "paymentRequests": [
             {
-              "amount": 100,
-              "amountPaid": 60,
-              "who": "aaa",
-              "dueAt": "333"
+              "amount": 500,
+              "amountPaid": 500,
+              "who": "eee",
+              "dueAt": "22/07/2023"
             }
           ],
           "payments": []
@@ -20,33 +20,19 @@
       ]
     },
     {
-      "email": "aaa",
+      "email": "eee",
       "expenses": [
         {
-          "expenseName": "e",
-          "expenseDate": "12",
+          "expenseName": "newExp",
+          "expenseDate": "02/05/2022",
           "amountSpent": "1000",
           "paymentRequests": [],
           "payments": [
             {
-              "amount": 90,
-              "amountPaid": 10,
-              "toWhom": "ccc",
-              "dueAt": "07/05/2023"
-            }
-          ]
-        },
-        {
-          "expenseName": "e",
-          "expenseDate": "12",
-          "amountSpent": "1000",
-          "paymentRequests": [],
-          "payments": [
-            {
-              "amount": 50,
-              "amountPaid": 50,
-              "toWhom": "aaa",
-              "dueAt": "07/05/2023"
+              "amount": 500,
+              "amountPaid": 500,
+              "toWhom": "ttt",
+              "dueAt": "07/16/2023"
             }
           ]
         }
