@@ -1,0 +1,56 @@
+{
+  "users": [
+    {
+      "email": "ccc",
+      "expenses": [
+        {
+          "expenseName": "e",
+          "expenseDate": "12",
+          "amountSpent": "1000",
+          "paymentRequests": [
+            {
+              "amount": 100,
+              "amountPaid": 60,
+              "who": "aaa",
+              "dueAt": "333"
+            }
+          ],
+          "payments": []
+        }
+      ]
+    },
+    {
+      "email": "aaa",
+      "expenses": [
+        {
+          "expenseName": "e",
+          "expenseDate": "12",
+          "amountSpent": "1000",
+          "paymentRequests": [],
+          "payments": [
+            {
+              "amount": 90,
+              "amountPaid": 10,
+              "toWhom": "ccc",
+              "dueAt": "07/05/2023"
+            }
+          ]
+        },
+        {
+          "expenseName": "e",
+          "expenseDate": "12",
+          "amountSpent": "1000",
+          "paymentRequests": [],
+          "payments": [
+            {
+              "amount": 50,
+              "amountPaid": 50,
+              "toWhom": "aaa",
+              "dueAt": "07/05/2023"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

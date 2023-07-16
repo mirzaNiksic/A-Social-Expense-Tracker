@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "email": "email@example.com",
+      "expenses": [
+        {
+          "expenseDate": "04/01/2023",
+          "expenseName": "Airtime",
+          "amountSpent": "10",
+          "paymentRequests": [],
+          "payments": []
+        },
+        {
+          "expenseDate": "12/01/2023",
+          "expenseName": "Uber",
+          "amountSpent": "7",
+          "paymentRequests": [],
+          "payments": []
+        },
+        {
+          "expenseDate": "20/01/2023",
+          "expenseName": "Movies",
+          "amountSpent": "10",
+          "paymentRequests": [],
+          "payments": [
+            {
+              "amount": 10,
+              "amountPaid": 10,
+              "toWhom": "email_one@example.com",
+              "dueAt": "20/03/2023"
+
+            }
+          ]
+        },
+        {
+          "expenseDate": "20/03/2023",
+          "expenseName": "Lunch at Restaurant",
+          "amountSpent": "40",
+          "paymentRequests": [
+            {
+              "amount": 20,
+              "amountPaid": 15,
+              "who": "colleague@example.com",
+              "dueAt": "03/04/2023"
+            },
+            {
+              "amount": 8,
+              "amountPaid": 0,
+              "who": "friend@example.com",
+              "dueAt": "05/04/2023"
+            }
+          ],
+          "payments": []
+        }
+      ]
+    }
+  ]
+}
