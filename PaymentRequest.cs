@@ -318,6 +318,8 @@ namespace ConsoleApp
                         userToDelete2 = root.users.FirstOrDefault(u => u.email == loggedInUser.email);
                     }
 
+
+
                     root.users.Remove(userToDelete);
                     root.users.Remove(userToDelete2);
 
