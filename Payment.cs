@@ -56,8 +56,13 @@ namespace ConsoleApp
                                     int amountLeft = payments.amount - payments.amountPaid;
                                     Console.WriteLine("Left to pay: " + amountLeft);
 
-                                    string dueDate = payments.dueAt;
-                                    Console.WriteLine("Due: " + dueDate);
+                                    DateTime dueDate = DateTime.ParseExact(payments.dueAt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                    int daysLeft = (int)dueDate.Subtract(DateTime.Now).TotalDays;
+                                    if (daysLeft < 0)
+                                    {
+                                        daysLeft = 0;
+                                    }
+                                    Console.WriteLine("Days left: " + daysLeft);
 
                                     string isPaid = (amountLeft == 0) ? "Yes" : "No";
                                     Console.WriteLine("Paid: " + isPaid);

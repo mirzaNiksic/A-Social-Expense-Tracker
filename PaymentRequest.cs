@@ -42,8 +42,13 @@ namespace ConsoleApp
                                     Console.WriteLine("Expense name: " + expense.expenseName);
                                     Console.WriteLine("You own to: " + user.email);
 
-                                    string dueDate = paymentRequests.dueAt;
-                                    Console.WriteLine("Due to: " + dueDate);
+                                    DateTime dueDate = DateTime.ParseExact(paymentRequests.dueAt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                    int daysLeft = (int)dueDate.Subtract(DateTime.Now).TotalDays;
+                                    if (daysLeft < 0)
+                                    {
+                                        daysLeft = 0;
+                                    }
+                                    Console.WriteLine("Days left: " + daysLeft);
 
                                     Console.WriteLine("Total amount: " + expense.amountSpent);
                                     Console.WriteLine("Amount requested: " + paymentRequests.amount);
@@ -93,10 +98,14 @@ namespace ConsoleApp
                                     Console.WriteLine("Name: " + expense.expenseName);
                                     Console.WriteLine("Requested from: " + paymentRequests.who);
 
-                                    string dueDate = paymentRequests.dueAt;
-                                    Console.WriteLine("Due to: " + dueDate);
+                                    DateTime dueDate = DateTime.ParseExact(paymentRequests.dueAt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                    int daysLeft = (int)dueDate.Subtract(DateTime.Now).TotalDays;
+                                    if (daysLeft < 0)
+                                    {
+                                        daysLeft = 0;
+                                    }
+                                    Console.WriteLine("Days left: " + daysLeft);
 
-                                    Console.WriteLine("Total amount: " + expense.amountSpent);
                                     Console.WriteLine("Amount requested: " + paymentRequests.amount);
                                     int amountLeft = paymentRequests.amount - paymentRequests.amountPaid;
                                     Console.WriteLine("Left to pay: " + amountLeft);
@@ -114,7 +123,7 @@ namespace ConsoleApp
             }
         }
 
-        public void AddNewPaymentRequest(User loggedInUser)
+        public void AddNewPaymentRequest(User loggedInUser, string expenseName = "")
         {
             PaymentRequest newPaymentRequest = new PaymentRequest();
             PaymentRequest deletePaymentRequest = new PaymentRequest();
@@ -123,7 +132,6 @@ namespace ConsoleApp
             var usersList = new List<User>();
             string filepath = @"C:\Users\MirzaNiksic.AzureAD\Desktop\TestStar5\consoleApp\preparationTest.json";
             bool isValid = false;
-            var expenseName = "";
 
             WebRequest webRequest = WebRequest.Create(filepath);
             WebResponse webResponse = webRequest.GetResponse();
@@ -149,14 +157,16 @@ namespace ConsoleApp
                         {
                             while (!isValid)
                             {
-                                Console.WriteLine("\nChoose the expense for which you want to request payment: ");
-
-                                foreach (var expense in user.expenses)
+                                if (expenseName.Equals(""))
                                 {
-                                    Console.WriteLine(expense.expenseName);
-                                }
-                                expenseName = Console.ReadLine();
+                                    Console.WriteLine("\nChoose the expense for which you want to request payment: ");
 
+                                    foreach (var expense in user.expenses)
+                                    {
+                                        Console.WriteLine(expense.expenseName);
+                                    }
+                                    expenseName = Console.ReadLine();
+                                }
                                 foreach (var expense in user.expenses)
                                 {
                                     if (expense.expenseName.Equals(expenseName))
@@ -306,7 +316,7 @@ namespace ConsoleApp
 
             if (input == "y")
             {
-                Console.WriteLine("\nChoose the expense for which you want to request payment: ");
+                Console.WriteLine("\nEnter expense name for which you want to request payment: ");
 
                 WebRequest webRequest = WebRequest.Create(filepath);
                 WebResponse webResponse = webRequest.GetResponse();

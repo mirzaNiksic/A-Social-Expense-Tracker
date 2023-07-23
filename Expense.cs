@@ -44,7 +44,112 @@ namespace ConsoleApp
             return new Expense(expense.expenseDate, expense.expenseName, expense.amountSpent, expense.paymentRequests, new List<Payment>());
         }
 
-        public void ViewUsersExpenses(User loggedInUser)
+        public void ViewExistingExpense(User loggedInUser)
+        {
+            string filepath = @"C:\Users\MirzaNiksic.AzureAD\Desktop\TestStar5\consoleApp\preparationTest.json";
+            var pR = new PaymentRequest();
+
+            int totalExpenses = 0;
+            int expenseAmount = 0;
+            int requested = 0;
+            int owe = 0;
+            int netPrice = 0;
+            string epenseNameInput = "";
+
+            WebRequest webRequest = WebRequest.Create(filepath);
+            WebResponse webResponse = webRequest.GetResponse();
+
+            using (Stream stream = webResponse.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(stream);
+                string responseFromServer = reader.ReadToEnd();
+
+                GetUsers root = JsonConvert.DeserializeObject<GetUsers>(responseFromServer);
+
+                foreach (User user in root.users)
+                {
+                    foreach (Expense expense in user.expenses)
+                    {
+                        if (user.email.Equals(loggedInUser.email))
+                        {
+                            Console.WriteLine("\n-------------------");
+                            Console.WriteLine($"Choose which expense you want to open: ");
+                            Console.WriteLine($"Expense Name: {expense.expenseName}");
+                        }
+                    }
+                }
+                epenseNameInput = Console.ReadLine();
+
+                foreach (User user in root.users)
+                {
+                    if (user.email.Equals(loggedInUser.email))
+                    {
+                        foreach (Expense expense in user.expenses)
+                        {
+                            if (expense.expenseName.Equals(epenseNameInput))
+                            {
+                                requested = 0;
+                                owe = 0;
+                                expenseAmount = 0;
+
+                                if (user.email.Equals(loggedInUser.email))
+                                {
+                                    Console.WriteLine("\n-------------------");
+                                    Console.WriteLine($"Expense Name: {expense.expenseName}");
+                                    Console.WriteLine($"Expense Date: {expense.expenseDate}");
+                                    Console.WriteLine($"Amount spent: {expense.amountSpent}");
+
+                                    expenseAmount = int.Parse(expense.amountSpent);
+
+                                    if (expense.paymentRequests.Count != 0)
+                                    {
+                                        foreach (var paymentRequest in expense.paymentRequests)
+                                        {
+                                            int amountLeft = paymentRequest.amount - paymentRequest.amountPaid;
+                                            if (amountLeft > 0)
+                                            {
+                                                Console.WriteLine($"Payment requests: Amount: {paymentRequest.amount}, Paid: {paymentRequest.amountPaid}, dueAt: {paymentRequest.dueAt}, to: {paymentRequest.who}, Need to pay: {amountLeft}");
+                                            }
+                                            else Console.WriteLine($"Payment requests: Amount: {paymentRequest.amount}, Paid: {paymentRequest.amountPaid}, dueAt: {paymentRequest.dueAt}, to: {paymentRequest.who}");
+                                            requested = requested + paymentRequest.amount;
+                                        }
+                                    }
+                                    if (expense.paymentRequests.Count != 0)
+                                    {
+                                        foreach (var paymentRequests in expense.paymentRequests)
+                                        {
+                                            if (paymentRequests.who.Equals(loggedInUser.email))
+                                            {
+                                                Console.WriteLine("\n-------------------");
+                                                Console.WriteLine($"Expense Name: {expense.expenseName}");
+                                                Console.WriteLine($"Expense Date: {expense.expenseDate}");
+                                                Console.WriteLine($"Amount spent: {expense.amountSpent}");
+                                                Console.WriteLine($"Requested from me: Amount: {paymentRequests.amount}, Paid: {paymentRequests.amountPaid}, dueAt: {paymentRequests.dueAt}");
+                                                owe = owe + paymentRequests.amount;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                netPrice = expenseAmount - requested + owe;
+                                totalExpenses = totalExpenses + netPrice;
+
+                                if (netPrice != 0)
+                                {
+                                    Console.WriteLine($"Payment requested: {requested}");
+                                    Console.WriteLine($"Net expenses: {netPrice}");
+                                }
+                            }
+                        }
+                    }
+                }
+                Console.WriteLine($"Add payment request for this expense? (y/n)");
+                string input = Console.ReadLine();
+                if (input.Equals("y")) pR.AddNewPaymentRequest(loggedInUser, epenseNameInput);
+            }
+        }
+
+        public void ExpensesList(User loggedInUser)
         {
             string filepath = @"C:\Users\MirzaNiksic.AzureAD\Desktop\TestStar5\consoleApp\preparationTest.json";
 
@@ -88,11 +193,6 @@ namespace ConsoleApp
                                     foreach (var paymentRequest in expense.paymentRequests)
                                     {
                                         int amountLeft = paymentRequest.amount - paymentRequest.amountPaid;
-                                        if (amountLeft > 0)
-                                        {
-                                            Console.WriteLine($"Payment requests: Amount: {paymentRequest.amount}, Paid: {paymentRequest.amountPaid}, dueAt: {paymentRequest.dueAt}, to: {paymentRequest.who}, Need to pay: {amountLeft}");
-                                        }
-                                        else Console.WriteLine($"Payment requests: Amount: {paymentRequest.amount}, Paid: {paymentRequest.amountPaid}, dueAt: {paymentRequest.dueAt}, to: {paymentRequest.who}");
                                         requested = requested + paymentRequest.amount;
                                     }
                                 }
@@ -106,8 +206,6 @@ namespace ConsoleApp
                                 {
                                     if (paymentRequests.who.Equals(loggedInUser.email))
                                     {
-                                        Console.WriteLine("\n-------------------");
-                                        Console.WriteLine($"Requested from me: For: {expense.expenseName}, Amount: {paymentRequests.amount}, Paid: {paymentRequests.amountPaid}, dueAt: {paymentRequests.dueAt}");
                                         owe = owe + paymentRequests.amount;
                                     }
                                 }
@@ -117,13 +215,17 @@ namespace ConsoleApp
                         netPrice = expenseAmount - requested + owe;
                         totalExpenses = totalExpenses + netPrice;
 
-                        if (netPrice != 0) Console.WriteLine($"Net expenses: {netPrice}");
+                        if (netPrice != 0)
+                        {
+                            Console.WriteLine($"Net expenses: {netPrice}");
+                            Console.WriteLine($"Payment requested: {requested}");
+                            Console.WriteLine($"Payment received : {owe}");
+                        }
                     }
                 }
             }
             Console.WriteLine($"\nTotal expenses: {totalExpenses}");
         }
-
 
         public void AddExpense(User loggedInUser)
         {
